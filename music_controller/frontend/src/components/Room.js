@@ -11,14 +11,14 @@ export default class Room extends Component {
     };
     this.roomCode = this.props.match.params.roomCode;
     this.getRoomDetails();
-    // this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
+    this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
   }
 
   getRoomDetails() {
     return fetch("/api/get_room" + "?code=" + this.roomCode)
       .then((response) => {
         if (!response.ok) {
-          this.props.leaveRoomCallback();
+          this.props.leaveRoomCallback;
           this.props.history.push("/");
         }
         return response.json();
@@ -32,16 +32,16 @@ export default class Room extends Component {
       });
   }
 
-//   leaveButtonPressed() {
-//     const requestOptions = {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//     };
-//     fetch("/api/leave-room", requestOptions).then((_response) => {
-//       this.props.leaveRoomCallback();
-//       this.props.history.push("/");
-//     });
-//   }
+  leaveButtonPressed() {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch("/api/leave_room", requestOptions).then((_response) => {
+      this.props.leaveRoomCallback;
+      this.props.history.push("/");
+    });
+  }
 
   render() {
     return (
@@ -66,7 +66,7 @@ export default class Room extends Component {
             Host: {this.state.isHost.toString()}
           </Typography>
         </Grid>
-        {/* <Grid item xs={12} align="center">
+        <Grid item xs={12} align="center">
           <Button
             variant="contained"
             color="secondary"
@@ -74,7 +74,7 @@ export default class Room extends Component {
           >
             Leave Room
           </Button>
-        </Grid> */}
+        </Grid>
       </Grid>
     );
   }

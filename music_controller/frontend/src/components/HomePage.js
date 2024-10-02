@@ -18,7 +18,7 @@ export default class HomePage extends Component {
     this.state ={
       roomCode: null,
     };
-    // this.clearRoomCode = this.clearRoomCode.bind(this);
+    this.clearRoomCode = this.clearRoomCode.bind(this);
   }
 
   async componentDidMount() {
@@ -31,7 +31,11 @@ export default class HomePage extends Component {
         console.log(data.code)
       });
   }
-
+  clearRoomCode (){
+    this.setState ={
+      roomCode: null,
+    };
+  }
   renderHomePage() {
     return (
       <Grid container spacing={3}>
@@ -59,14 +63,16 @@ export default class HomePage extends Component {
         <Switch>
           <Route path="/join" component={RoomJoinPage} />
           <Route path="/create_room" component={CreateRoomPage} />
-          <Route path="/get_room/:roomCode" component={Room} />
+          <Route path="/get_room/:roomCode" component={Room} render={(props) => {
+              return <Room {...props} leaveRoomCallback={this.clearRoomCode} />;
+            }} />
           <Route path="/join_room" component={RoomJoinPage} />
           <Route
             exact
             path="/"
             render={() => {
               return this.state.roomCode ? (
-                <Redirect to={`/room/${this.state.roomCode}`} />
+                <Redirect to={`/get_room/${this.state.roomCode}`} />
               ) : (
                 this.renderHomePage()
               );
