@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import RoomJoinPage from "./RoomJoinPage";
 import CreateRoomPage from "./CreateRoomPage";
 import Room from "./Room";
+import { Grid, Button, ButtonGroup, Typography } from "@material-ui/core";
 
 import {
   BrowserRouter as Router,
@@ -14,9 +15,45 @@ import {
 export default class HomePage extends Component {
   constructor(props) {
     super(props);
+    this.state ={
+      roomCode: null,
+    };
+    // this.clearRoomCode = this.clearRoomCode.bind(this);
   }
 
-  render() {
+  async componentDidMount() {
+    fetch("/api/user_in_room")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          roomCode: data.code,
+        });
+        console.log(data.code)
+      });
+  }
+
+  renderHomePage() {
+    return (
+      <Grid container spacing={3}>
+        <Grid item xs={12} align="center">
+          <Typography variant="h3" compact="h3">
+            House Party
+          </Typography>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <ButtonGroup disableElevation variant="contained" color="primary">
+            <Button color="primary" to="/join_room" component={Link}>
+              Join a Room
+            </Button>
+            <Button color="secondary" to="/create_room" component={Link}>
+              Create a Room
+            </Button>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+    );
+  }
+    render() {
     return (
       <Router>
         <Switch>
@@ -24,9 +61,17 @@ export default class HomePage extends Component {
           <Route path="/create_room" component={CreateRoomPage} />
           <Route path="/get_room/:roomCode" component={Room} />
           <Route path="/join_room" component={RoomJoinPage} />
-          <Route exact path="/">
-            <p>This is the home page</p>
-          </Route>
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return this.state.roomCode ? (
+                <Redirect to={`/room/${this.state.roomCode}`} />
+              ) : (
+                this.renderHomePage()
+              );
+            }}
+          />
         </Switch>
       </Router>
     );
